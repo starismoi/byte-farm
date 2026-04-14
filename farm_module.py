@@ -121,6 +121,8 @@ def soil_dirt(player):
     fn.title("soiling")
     print("Where would you like to soil?")
     index = fn.get_index()
+    if index == "Invalid":
+        return
     tile = player.farm[index]
     if tile.type != "Dirt":
         print("This Tile is not Dirt.")

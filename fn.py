@@ -36,6 +36,7 @@ def get_index():
         except:
             print("This is not a valid index!")
             wait()
+    return "Invalid"
 
 def status_bar(player):
     name = player.name
@@ -75,4 +76,8 @@ def checker_ultima(action, condition):
     
 def action_error(action):
     print(f"{action} isn't an action!")
+    wait()
+
+def tile_error(tile):
+    print(f"{tile} isn't a valid tile!")
     wait()

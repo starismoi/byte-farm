@@ -2,6 +2,7 @@ import random
 import fn
 import player_module
 import plant_module
+import item_module
 
 class Tile:
     def __init__(self, index, type, plant = "None", soiled=False):
@@ -20,7 +21,7 @@ class Tile:
         self.soiled = True
         self.graphics = self.type+"Soiled"
 
-    def harvest(self, plant_type):
+    def harvest(self):
         harvest = self.plant
         self.plant = "None"
         return harvest
@@ -112,6 +113,7 @@ def plant_seeds(player):
             plant = plant_module.Plant(species, rarity, 0, quality, mutation)
             tile.plant = plant
             seed.amount -= 1
+            player_module.check_zero(player)
         else:
             print("This tile is not a valid tile.")
             fn.wait()
@@ -136,8 +138,27 @@ def soil_dirt(player):
         tile.soil()
 
 def harvest_crops(player):
+    fn.clear_screen()
     fn.title("harvest crops")
-    pass
+    print("What plant would you like to harvest?")
+    index = fn.get_index()
+    if index == "Invalid":
+        return
+    tile = player.farm[index]
+    if tile.plant == "None":
+        fn.error("There is no plant here!")
+        return
+    elif tile.plant.stage < 3:
+        fn.error("This plant is too young to harvest!")
+        return
+    else:
+        harvest = tile.plant
+        valid = player_module.add_item(item_module.Plant_Item(harvest, 1))
+        if valid == "Invalid":
+            fn.error("Your inventory is full!")
+            return
+        tile.harvest()
+        
 
 def check_tile(player):
     fn.clear_screen()
@@ -166,3 +187,15 @@ def check_tile(player):
         print("This is not a valid tile.")
         fn.wait()
         return
+    
+def grow_plants(player):
+    farm = player.farm
+    for tile in farm:
+        if tile.plant == "None":
+            pass
+        else:
+            if tile.plant.stage < 3:
+                tile.plant.stage += 1
+                tile.plant.graphics = tile.plant.species + str(tile.plant.stage)
+            else:
+                pass

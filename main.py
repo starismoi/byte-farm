@@ -1,5 +1,6 @@
 import player_module
 import farm_module
+import time
 import fn
         
 # New Game / Continue logic (save files)
@@ -90,11 +91,28 @@ def actions(player):
 
 # Main
 
+def time_cycle(player, hours):
+    player.hour += hours
+    daycount = 0
+    if player.hour >= 24:
+        while player.hour >= 24:
+            player.hour -= 24
+            farm_module.grow_plants(player)
+            daycount += 1
+        player.day += daycount
+    
+
 def main():
     player = menu()
     fn.clear_screen()
     running = True
+    last_time = time.time()
     while running:
+        current_time = time.time()
+        elapsed_time = current_time - last_time
+        
+        if elapsed_time > 10:
+            time_cycle(player, elapsed_time/10)
         fn.status_bar(player)
         actions(player)
         fn.clear_screen()

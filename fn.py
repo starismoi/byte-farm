@@ -24,18 +24,19 @@ def get_index():
         x, y = value.split(",")
         try:
             x, y = int(x), int(y)
+            if not type(x) == int or not type(y) == int:
+                error("These are not valid coordinates!")
+                return "Invalid"
             index = x + (10 * y)
             return index
         except:
-            ("These are not valid coordinates!")
-            wait()
+            error("These are not valid coordinates!")
     except:
         try:
             index = int(value)
             return index
         except:
-            print("This is not a valid index!")
-            wait()
+            error("This is not a valid index!")
     return "Invalid"
 
 def status_bar(player):
@@ -44,7 +45,13 @@ def status_bar(player):
     gold = player.gold
     location = player.location
     faith = player.faith
-    print(f"{name} / {farm_name} / {gold}G / @{location} / Faith: {faith}\n")
+    day = player.day
+    hour = player.hour
+    if hour > 12:
+        hour_display, sfx = hour - 12, "PM"
+    else:
+        hour_display, sfx = hour, "AM"
+    print(f"{name} / {farm_name} / {gold}G / @{location} / Faith: {faith} / Day: {int(day)} / {int(hour_display)} {sfx}\n")
 
 def option_check(type, action, condition):
     if type == int:
@@ -80,4 +87,8 @@ def action_error(action):
 
 def tile_error(tile):
     print(f"{tile} isn't a valid tile!")
+    wait()
+
+def error(msg):
+    print(msg)
     wait()

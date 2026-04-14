@@ -100,7 +100,7 @@ def plant_seeds(player):
                 return
         except:
             return
-        print("\nWhere would you like to plant this seed?\n")
+        print("\nWhere would you like to plant this seed?")
         index = fn.get_index()
         tile = farm[index]
         if tile in soiled_tiles:
@@ -144,9 +144,18 @@ def check_tile(player):
     index = fn.get_index()
     try:
         tile = farm[index]
+        fn.title("Tile information")
         print("Type:", tile.type)
-        print("Plant:", tile.plant)
         print("Soiled:", tile.soiled, "\n")
+        if tile.plant != "None":
+            fn.title("Plant Information")
+            print("Plant:", tile.plant.species)
+            print("Plant Rarity:", tile.plant.rarity)
+            print("Plant Stage:", tile.plant.stage)
+            print("Plant Quality:", tile.plant.quality)
+            print("Plant Mutation:", tile.plant.mutation, "\n")
+        else:
+            print("Plant: None\n")
         quit = input("enter q to quit: ")
         print("")
         if quit == "q":

@@ -51,11 +51,12 @@ def generate():
         farm.append(tile)
     return farm
 
-def render(player):
+def render(player, disable_quit_input = False):
     farm = player.farm
     max_width = 10
-    fn.clear_screen()
-    fn.title("farm")
+    if disable_quit_input == False:
+        fn.clear_screen()
+        fn.title("farm")
     current_row = 0
     print(" ", end = "") # left indentation
     for x in range(max_width):
@@ -74,6 +75,8 @@ def render(player):
             print(f"\n{current_row}", end = "")
             current_row += 1
     print("\n")
+    if disable_quit_input == True:
+        return
     while True:
         quit = input("enter q to exit: ")
         print("")
@@ -101,11 +104,15 @@ def plant_seeds(player):
                 return
         except:
             return
-        print("\nWhere would you like to plant this seed?")
+        render(player, True)
+        print("Where would you like to plant this seed?")
         index = fn.get_index()
         if index == "Invalid":
             return
         tile = farm[index]
+        if tile.plant != "None":
+            fn.error("This tile already has a plant!")
+            return
         if tile in soiled_tiles:
             species = seed.species
             quality = random.randint(1, 100) / 100
@@ -117,12 +124,12 @@ def plant_seeds(player):
             seed.amount -= 1
             player_module.check_zero(player)
         else:
-            print("This tile is not a valid tile.")
-            fn.wait()
+            fn.error("This tile is not a valid tile.")
                 
 def soil_dirt(player):
     fn.clear_screen()
     fn.title("soiling")
+    render(player, True)
     print("Where would you like to soil?")
     index = fn.get_index()
     if index == "Invalid":
@@ -142,6 +149,7 @@ def soil_dirt(player):
 def harvest_crops(player):
     fn.clear_screen()
     fn.title("harvest crops")
+    render(player, True)
     print("What plant would you like to harvest?")
     index = fn.get_index()
     if index == "Invalid":
@@ -155,9 +163,9 @@ def harvest_crops(player):
         return
     else:
         harvest = tile.plant
-        valid = player_module.add_item(player, item_module.Plant_Item(harvest, 1))
-        if valid == "Invalid":
-            fn.error("Your inventory is full!")
+        valid = player_module.add_item(player, item_module.Plant_Item(harvest, 1, "Plant"))
+        if valid == 1:
+            fn.error("Not enough space in inventory!")
             return
         tile.harvest()
         
@@ -166,6 +174,7 @@ def check_tile(player):
     fn.clear_screen()
     farm = player.farm
     fn.title("check tile")
+    render(player, True)
     index = fn.get_index()
     try:
         tile = farm[index]

@@ -1,8 +1,9 @@
+import time
+import pickle
 import player_module
 import farm_module
-import time
 import fn
-        
+    
 # New Game / Continue logic (save files)
 
 def new_game():
@@ -15,8 +16,17 @@ def new_game():
     player = player_module.Player(name, farm, farm_name, 100, "Default", 1, player_module.starting_inv)
     return player
 
+def save_game(player):
+    with open("savefile.dat", "wb") as f:
+        pickle.dump(player, f)
+
 def continue_game():
-    pass
+    try:
+        with open("savefile.dat", "rb") as f:
+            return pickle.load(f)
+    except:
+        fn.error("No Save File Found!")
+        return 1
 
 def credits():
     fn.clear_screen()
@@ -41,11 +51,17 @@ def menu():
                 return player
             elif choice == 2:
                 player = continue_game()
+                if player == 1:
+                    return
                 return player
             elif choice == 3:
                 credits()
             elif choice == 4:
                 quit()
+
+def save_and_return(player):
+    save_game(player)
+    menu()
 
 # Actions
 
@@ -60,7 +76,7 @@ def actions(player):
             2 : lambda: player_module.change_location(player, "Trade Center"),
             3 : lambda: player_module.change_location(player, "Temple"),
             4 : lambda: player_module.open_inventory(player),
-            5 : menu
+            5 : lambda: save_and_return(player)
         }
         choice, type, validity =  fn.checker_ultima(choice, len(func_dict))
         if validity:
@@ -112,8 +128,8 @@ def main():
         current_time = time.time()
         elapsed_time = current_time - last_time
         
-        if elapsed_time > 5:
-            time_cycle(player, elapsed_time/5)
+        if elapsed_time > 1:
+            time_cycle(player, elapsed_time)
             last_time = current_time
         fn.status_bar(player)
         actions(player)

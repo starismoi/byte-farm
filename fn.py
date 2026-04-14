@@ -34,6 +34,9 @@ def get_index():
     except:
         try:
             index = int(value)
+            if type(index) != int:
+                error("This is not a valid index!")
+                return "Invalid"
             return index
         except:
             error("This is not a valid index!")

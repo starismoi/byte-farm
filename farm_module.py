@@ -103,6 +103,8 @@ def plant_seeds(player):
             return
         print("\nWhere would you like to plant this seed?")
         index = fn.get_index()
+        if index == "Invalid":
+            return
         tile = farm[index]
         if tile in soiled_tiles:
             species = seed.species
@@ -153,7 +155,7 @@ def harvest_crops(player):
         return
     else:
         harvest = tile.plant
-        valid = player_module.add_item(item_module.Plant_Item(harvest, 1))
+        valid = player_module.add_item(player, item_module.Plant_Item(harvest, 1))
         if valid == "Invalid":
             fn.error("Your inventory is full!")
             return

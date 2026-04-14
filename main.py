@@ -22,7 +22,7 @@ def credits():
     fn.clear_screen()
     file = open("credits")
     print(file.read())
-    quit = input("\nenter q to quit: ")
+    quit = input("enter q to quit: ")
     if quit == "q":
         file.close()
         return
@@ -82,6 +82,7 @@ def actions(player):
         choice, type, validity =  fn.checker_ultima(choice, len(func_dict))
         if validity:
             func_dict[choice]()
+            return
     
     elif player.location == "Trade Center":
         pass
@@ -111,8 +112,9 @@ def main():
         current_time = time.time()
         elapsed_time = current_time - last_time
         
-        if elapsed_time > 10:
-            time_cycle(player, elapsed_time/10)
+        if elapsed_time > 5:
+            time_cycle(player, elapsed_time/5)
+            last_time = current_time
         fn.status_bar(player)
         actions(player)
         fn.clear_screen()

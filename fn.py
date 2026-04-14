@@ -1,5 +1,7 @@
 import time
 import os
+import subprocess
+import random
 
 def wait():
     time.sleep(1.5)
@@ -95,3 +97,23 @@ def tile_error(tile):
 def error(msg):
     print(msg)
     wait()
+
+# cursed words usage
+
+def cursed_word(min, max):
+    result = subprocess.run(
+        ["python3", "cursed_words.py", "1", str(min), str(max)], 
+        capture_output=True, 
+        text=True
+    )
+    result = result.stdout.strip()
+    return result
+
+def quote_of_the_day():
+    quote = ""
+    quote_length = random.randint(4,5)
+    for i in range(quote_length):
+        word = cursed_word(2, 4)
+        quote = quote + word + " "
+    return quote
+

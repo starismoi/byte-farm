@@ -2,6 +2,7 @@ import time
 import pickle
 import player_module
 import farm_module
+import trade_module
 import fn
     
 # New Game / Continue logic (save files)
@@ -14,6 +15,8 @@ def new_game():
     farm_name = input("What is the name of your farm?\n\n: ")
     print("")
     player = player_module.Player(name, farm, farm_name, 100, "Default", 1, player_module.starting_inv)
+    player.quote = fn.quote_of_the_day()
+    player.deity = fn.cursed_word(4,5).capitalize()
     return player
 
 def save_game(player):
@@ -101,7 +104,21 @@ def actions(player):
             return
     
     elif player.location == "Trade Center":
-        pass
+        print(f"1. View Market\n2. Sell Harvest\n3. Purchase\n4. Sacrifice\n5. Pray to {player.deity}\n6. Return\n")
+        choice = input(": ")
+        print("")
+        func_dict = {
+            1: lambda: trade_module.display_market(player),
+            2: lambda: trade_module.display_market(player),
+            3: lambda: trade_module.display_market(player),
+            4: lambda: trade_module.display_market(player),
+            5: lambda: trade_module.display_market(player),
+            6: lambda: player_module.change_location(player, "Default"),
+        }
+        choice, type, validity = fn.checker_ultima(choice, len(func_dict))
+        if validity:
+            func_dict[choice]()
+            return
 
     elif player.location == "Temple":
         pass
@@ -115,6 +132,7 @@ def time_cycle(player, hours):
         while player.hour >= 24:
             player.hour -= 24
             farm_module.grow_plants(player)
+            player.quote = fn.quote_of_the_day()
             daycount += 1
         player.day += daycount
     

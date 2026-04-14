@@ -12,6 +12,8 @@ class Player:
         self.inventory = inventory
         self.day = day
         self.hour = hour
+        self.quote = None
+        self.deity = None
 
 def open_inventory(player):
     inventory = player.inventory
